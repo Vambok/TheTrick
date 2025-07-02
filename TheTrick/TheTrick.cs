@@ -79,8 +79,6 @@ public class TheTrick : ModBehaviour {
     public void OnCompleteSceneLoad(OWScene previousScene, OWScene newScene) {
         if(newScene != OWScene.SolarSystem) return;
         ModHelper.Console.WriteLine("Loaded into solar system!", MessageType.Success);
-        //PlayerData.SetPersistentCondition("SOLANUM_FOLLOW", false);
-        //PlayerData.SetPersistentCondition("STONE_ENTERED_TIMELOOPCORE", false);
         ModHelper.Console.WriteLine("PlayerCamera name: " + GameObject.FindWithTag("MainCamera").name, MessageType.Success);
         myAnimator = GameObject.FindWithTag("MainCamera").AddComponent<MVBMod_Animator>();
         ModHelper.Console.WriteLine("MVBMod_Animator loaded!", MessageType.Success);
@@ -102,7 +100,7 @@ public class TheTrick : ModBehaviour {
         secretBridge.localEulerAngles = new Vector3(0, 25, 0);
         secretBridge.localScale = new Vector3(1.1f, 1, 1);
         secretBridge.gameObject.name = "MVBMod_LightwellBridge";
-        secretBridge.gameObject.AddComponent<MVBMod_tag>();
+        secretBridge.gameObject.AddComponent<MVBTheTrick_tag>();
         Transform tartopom = GameObject.Instantiate(GameObject.Find("Simulation_DreamZone_3").transform.Find("Interactibles_DreamZone_3").GetChild(4), secretBridge);
         tartopom.localPosition = Vector3.zero;
         tartopom.gameObject.name = "MVBMod_LightwellBridge_SimMesh";
@@ -116,14 +114,14 @@ public class TheTrick : ModBehaviour {
         secretWarpDest.localPosition = new Vector3(-36, 80.5f, -47);
         secretWarpDest.localEulerAngles = 180 * Vector3.up;
         secretWarpDest.gameObject.name = "MVBMod_LightwellWarpDest";
-        secretWarpDest.gameObject.AddComponent<MVBMod_tag>();
+        secretWarpDest.gameObject.AddComponent<MVBTheTrick_tag>();
         // Warpzone in upper water
         Transform secretWarp = GameObject.Find("ElevatorWarp_Upper_4").transform;
         secretWarp = GameObject.Instantiate(secretWarp, secretWarp.parent);
         secretWarp.localPosition = new Vector3(39.3f, -12.5f, 58.4f);
         secretWarp.localEulerAngles = Vector3.zero;
         secretWarp.gameObject.name = "MVBMod_LightwellWarp";
-        secretWarp.gameObject.AddComponent<MVBMod_tag>();
+        secretWarp.gameObject.AddComponent<MVBTheTrick_tag>();
         DreamElevatorWarpVolume warpControl = secretWarp.gameObject.GetComponent<DreamElevatorWarpVolume>();
         warpControl._attachedBody = warpControl._destinationBody;
         warpControl._destinationTransform = secretWarpDest;
@@ -135,14 +133,14 @@ public class TheTrick : ModBehaviour {
         floorGear.localEulerAngles = new Vector3(0, 70, 0);
         floorGear.localScale = new Vector3(0.5f, 0.3f, 0.5f);
         floorGear.gameObject.name = "MVBMod_LightwellFloor";
-        floorGear.gameObject.AddComponent<MVBMod_tag>();
+        floorGear.gameObject.AddComponent<MVBTheTrick_tag>();
         // Lightwell center
         Transform floorHole = GameObject.Instantiate(terrainSource.Find("DZ4_PrisonIsland_Ext_Walls"), terrainSource);
         floorHole.localPosition = new Vector3(-39.3f, -4.7f, -58.4f);
         floorHole.localEulerAngles = new Vector3(0, 201.5f, 356);
         floorHole.localScale = Vector3.one / 2f;
         floorHole.gameObject.name = "MVBMod_LightwellHole";
-        floorHole.gameObject.AddComponent<MVBMod_tag>();
+        floorHole.gameObject.AddComponent<MVBTheTrick_tag>();
         // Sounds of the hatch
         floorHole.gameObject.SetActive(false);
         OWAudioSource audioSource = floorHole.gameObject.AddComponent<OWAudioSource>();
@@ -170,7 +168,7 @@ public class TheTrick : ModBehaviour {
         secretGear.localPosition = new Vector3(-33.1f, 0.6f, -77.5f);
         secretGear.localEulerAngles = new Vector3(0, 65, 0);
         secretGear.gameObject.name = "MVBMod_LightwellGear";
-        secretGear.gameObject.AddComponent<MVBMod_tag>();
+        secretGear.gameObject.AddComponent<MVBTheTrick_tag>();
         secretGear.Find("GreenLight_Top").gameObject.SetActive(false);
         secretGear = secretGear.Find("InteractReceiver_Gear");
         GearInterfaceEffects interfaceEffect = secretGear.GetComponent<GearInterfaceEffects>();
@@ -185,14 +183,14 @@ public class TheTrick : ModBehaviour {
                 interactReceiver._screenPrompt._text = "<CMD> Close lightwell hatch";
                 interactReceiver._textID = (UITextType)2;
                 wellClosed = false;
-                myAnimator.MvbAnimator(theHatch.transform, new Vector3(-1.3f, 6.3f, -16.1f), soundLength, new Vector3(-20, 0, 4f));
+                myAnimator.Animate(theHatch.transform, new Vector3(-1.3f, 6.3f, -16.1f), soundLength, new Vector3(-20, 0, 4f));
             } else {
                 interfaceEffect.AddRotation(-135f);
                 audioSource.PlayDelayed(soundLength);
                 interactReceiver._screenPrompt._text = "<CMD> Open lightwell hatch";
                 interactReceiver._textID = (UITextType)3;
                 wellClosed = true;
-                myAnimator.MvbAnimator(theHatch.transform, new Vector3(-1.3f, 9.2f, -0.3f), soundLength, new Vector3(360, 0, 4f));
+                myAnimator.Animate(theHatch.transform, new Vector3(-1.3f, 9.2f, -0.3f), soundLength, new Vector3(360, 0, 4f));
             }
             interactReceiver._resetInteractionTime = Time.time + soundLength;
         });
@@ -222,7 +220,7 @@ public class TheTrick : ModBehaviour {
         prisonersLantern.localPosition = new Vector3(0, 1.63f, 0.66f);
         prisonersLantern.localEulerAngles = Vector3.zero;
         prisonersLantern.gameObject.name = "MVBMod_PLantern";
-        prisonersLantern.gameObject.AddComponent<MVBMod_tag>().type = "DreamLanternController";
+        prisonersLantern.gameObject.AddComponent<MVBTheTrick_tag>().type = "DreamLanternController";
         DreamLanternController pLanternController = prisonersLantern.gameObject.GetComponent<DreamLanternController>();
         GameObject.Find("GhostDirector_Prisoner").GetComponent<PrisonerDirector>().OnPrisonerDeparted += (() => {
             pLanternController.enabled = true;
@@ -251,27 +249,27 @@ public class TheTrick : ModBehaviour {
                 Transform prisonerLantern = GameObject.Find("PrisonerFillLight").transform.parent;
                 Transform target = Locator.GetDreamWorldController()._playerLantern.gameObject.transform;
                 Vector3 pivot = prisonerLantern.parent.parent.position;
-                // STEP 1: Get current world-space look-origin position
+                //Get current world-space look-origin position
                 Vector3 worldLookOrigin = prisonerLantern.TransformPoint(Vector3.down * 0.3f);
-                // STEP 2: Compute the desired look rotation from look-origin to target
+                //Compute the desired look rotation from look-origin to target
                 Quaternion desiredRotation = Quaternion.LookRotation(target.position - worldLookOrigin, Vector3.up);
-                // STEP 3: Compute delta rotation from current to desired
+                //Compute delta rotation from current to desired
                 Quaternion deltaRotation = desiredRotation * Quaternion.Inverse(prisonerLantern.rotation);
-                // STEP 4: Apply rotation around pivot
+                //Apply rotation around pivot
                 Vector3 targetPosition = pivot + deltaRotation * (prisonerLantern.position - pivot);
-                // STEP 5: Send to smoothing systems
+                //Send to smoothing systems
                 ModHelper.Console.WriteLine("trick calculated", MessageType.Success);
                 MVBMod_Animator myAnimator = Locator.GetPlayerCamera().gameObject.AddComponent<MVBMod_Animator>();
-                myAnimator.MvbAnimator(prisonerLantern, prisonerLantern.parent.InverseTransformPoint(targetPosition), 2f, prisonerLantern.parent.InverseTransformRotation(desiredRotation).eulerAngles, (int)MVBMod_Animator.AnimationType.pLantern_exchange, (int)MVBMod_Animator.AnimationType.pLantern_reset, 2);
+                myAnimator.Animate(prisonerLantern, prisonerLantern.parent.InverseTransformPoint(targetPosition), 2f, prisonerLantern.parent.InverseTransformRotation(desiredRotation).eulerAngles, (int)MVBMod_Animator.AnimationType.pLantern_exchange, (int)MVBMod_Animator.AnimationType.pLantern_reset, 2);
                 ModHelper.Console.WriteLine("trick animation sent", MessageType.Success);
-                myAnimator.MvbAnimator(prisonerLantern, Vector3.zero, 2f, Vector3.zero, (int)MVBMod_Animator.AnimationType.pLantern_reset, (int)MVBMod_Animator.AnimationType.Global_reset, 1);
-                myAnimator.MvbAnimator(prisonerLantern, Vector3.zero, 0, (int)MVBMod_Animator.AnimationType.Global_reset);
+                myAnimator.Animate(prisonerLantern, Vector3.zero, 2f, Vector3.zero, (int)MVBMod_Animator.AnimationType.pLantern_reset, (int)MVBMod_Animator.AnimationType.Global_reset, 1);
+                myAnimator.Animate(prisonerLantern, Vector3.zero, 0, (int)MVBMod_Animator.AnimationType.Global_reset);
                 DreamLanternController pDreamLanterncontroller = prisonerLantern.gameObject.GetComponent<DreamLanternController>();
-                myAnimator.MvbBonusAction((int)MVBMod_Animator.AnimationType.pLantern_exchange, () => pDreamLanterncontroller.MoveTowardFocus(1f, 2f), 2);
-                myAnimator.MvbBonusAction((int)MVBMod_Animator.AnimationType.pLantern_exchange, () => pDreamLanterncontroller.MoveTowardFocus(0f, 1f), 2, 1);
-                myAnimator.MvbBonusAction((int)MVBMod_Animator.AnimationType.pLantern_reset, () => pDreamLanterncontroller.MoveTowardFocus(0f, 1f));
-                myAnimator.MvbBonusAction((int)MVBMod_Animator.AnimationType.Global_reset, () => { myAnimator.MvbAnimator(); DialogueConditionManager.SharedInstance.SetConditionState("LINKED_TO_PRISONER", false); });
-                myAnimator.MvbAnimator((int)MVBMod_Animator.AnimationType.pLantern_exchange);
+                myAnimator.AddAction((int)MVBMod_Animator.AnimationType.pLantern_exchange, () => pDreamLanterncontroller.MoveTowardFocus(1f, 2f), 2);
+                myAnimator.AddAction((int)MVBMod_Animator.AnimationType.pLantern_exchange, () => pDreamLanterncontroller.MoveTowardFocus(0f, 1f), 2, 1);
+                myAnimator.AddAction((int)MVBMod_Animator.AnimationType.pLantern_reset, () => pDreamLanterncontroller.MoveTowardFocus(0f, 1f));
+                myAnimator.AddAction((int)MVBMod_Animator.AnimationType.Global_reset, () => { myAnimator.ResetAll(); DialogueConditionManager.SharedInstance.SetConditionState("LINKED_TO_PRISONER", false); });
+                myAnimator.SetTrigger((int)MVBMod_Animator.AnimationType.pLantern_exchange);
                 ModHelper.Console.WriteLine("trick animation started", MessageType.Success);
             }
         });
@@ -328,20 +326,10 @@ public class TheTrick : ModBehaviour {
 
 [HarmonyPatch]
 public class MyPatchClass {
-    [HarmonyTranspiler]
-    [HarmonyPatch(typeof(TitleScreenAnimation), nameof(TitleScreenAnimation.Update))]
-    static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) { // Fuck gamepads
-        return new CodeMatcher(instructions).MatchForward(false,
-            new CodeMatch(i => i.opcode == System.Reflection.Emit.OpCodes.Ldc_R4 && Convert.ToInt16(i.operand) == 6),
-            new CodeMatch(System.Reflection.Emit.OpCodes.Add),
-            new CodeMatch(i => i.opcode == System.Reflection.Emit.OpCodes.Stfld && ((FieldInfo)i.operand).Name == "_fadeOutGamepadTime")
-        ).Repeat(match => match.SetOperandAndAdvance(0f)).Instructions();
-    }
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Sector), nameof(Sector.OnEntry))]
     public static void Sector_OnEntry_Postfix(Sector __instance) { // Loading new meshes, colliders and custom functions
-        foreach(MVBMod_tag marker in __instance.gameObject.GetComponentsInChildren<MVBMod_tag>(true)) {
+        foreach(MVBTheTrick_tag marker in __instance.gameObject.GetComponentsInChildren<MVBTheTrick_tag>(true)) {
             bool newObj = true;
             if(marker.type != null) {
                 switch(marker.type) {
@@ -369,6 +357,8 @@ public class MyPatchClass {
                     fluidDetector.GetShape().SetActivation(true);
                     marker.type = null;
                     break;
+				default:
+					break;
                 }
             }
             if(newObj) {
@@ -385,7 +375,7 @@ public class MyPatchClass {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(DreamLanternItem), nameof(DreamLanternItem.OnEnterDreamWorld))]
     public static void DreamLanternItem_OnEnterDreamWorld_Postfix(DreamLanternItem __instance) { // Activating simulation glitch
-        if(__instance.gameObject.GetComponent<MVBMod_tag>() != null && __instance._lanternType == DreamLanternType.Malfunctioning) {
+        if(__instance.gameObject.GetComponent<MVBTheTrick_tag>() != null && __instance._lanternType == DreamLanternType.Malfunctioning) {
             //            GlobalMessenger<OWCamera>.FireEvent("SwitchActiveCamera", GameObject.Find("MVBMod_PrisonerView").GetComponent<OWCamera>());
             OWInput.ChangeInputMode(InputMode.None);
             Locator.GetPlayerTransform().GetComponent<PlayerResources>().ToggleInvincibility();
@@ -394,17 +384,17 @@ public class MyPatchClass {
             OWCamera playerCamera = Locator.GetPlayerCamera();
             MVBMod_Animator myAnimator = playerCamera.gameObject.GetComponent<MVBMod_Animator>();
             //            myAnimator.MvbBonusAction((int)MVBMod_Animator.AnimationType.To_Prisoners_head, () => { GlobalMessenger<OWCamera>.FireEvent("SwitchActiveCamera", GameObject.Find("MVBMod_PrisonerView").GetComponent<OWCamera>()); });
-            myAnimator.MvbAnimator(__instance.transform, __instance.transform.localPosition, 0, (int)MVBMod_Animator.AnimationType.To_Prisoners_head, (int)MVBMod_Animator.AnimationType.From_Prisoners_head, -2f);
+            myAnimator.Animate(__instance.transform, __instance.transform.localPosition, 0, (int)MVBMod_Animator.AnimationType.To_Prisoners_head, (int)MVBMod_Animator.AnimationType.From_Prisoners_head, -2f);
             //            myAnimator.MvbBonusAction((int)MVBMod_Animator.AnimationType.From_Prisoners_head, () => { GlobalMessenger<OWCamera>.FireEvent("SwitchActiveCamera", playerCamera); });
-            myAnimator.MvbAnimator(__instance.transform, __instance.transform.localPosition, 0, (int)MVBMod_Animator.AnimationType.From_Prisoners_head, (int)MVBMod_Animator.AnimationType.To_Prisoners_head, -6f);
-            myAnimator.MvbAnimator((int)MVBMod_Animator.AnimationType.To_Prisoners_head, 5f);
+            myAnimator.Animate(__instance.transform, __instance.transform.localPosition, 0, (int)MVBMod_Animator.AnimationType.From_Prisoners_head, (int)MVBMod_Animator.AnimationType.To_Prisoners_head, -6f);
+            myAnimator.SetTrigger((int)MVBMod_Animator.AnimationType.To_Prisoners_head, 5f);
         }
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(DreamLanternItem), nameof(DreamLanternItem.OnExitDreamWorld))]
     public static void DreamLanternItem_OnExitDreamWorld_Postfix(DreamLanternItem __instance) {
-        if(__instance.gameObject.GetComponent<MVBMod_tag>() != null && __instance._lanternType == DreamLanternType.Malfunctioning) {
+        if(__instance.gameObject.GetComponent<MVBTheTrick_tag>() != null && __instance._lanternType == DreamLanternType.Malfunctioning) {
             Locator.GetPlayerTransform().GetComponent<PlayerResources>().ToggleInvincibility();
             Locator.GetDeathManager().ToggleInvincibility();
             GameObject.Find("MVBMod_PrisonerView").GetComponent<OWCamera>().enabled = false;
@@ -420,89 +410,87 @@ public class MyPatchClass {
             __instance._fluidDetector.GetShape().SetActivation(true);
             __instance._lanternController.SetLit(true);
         } else if(DialogueConditionManager.SharedInstance.GetConditionState("LINKED_TO_PRISONER")) {
-            Locator.GetPlayerCamera().gameObject.GetComponent<MVBMod_Animator>().MvbAnimator(); // Clear all animations
+            Locator.GetPlayerCamera().gameObject.GetComponent<MVBMod_Animator>().ResetAll(); // Clear all animations
         }
     }
 }
 
 public class MVBMod_Animator : MonoBehaviour {
-    class MvbAnimation(Transform toAnimate, Vector3 toWhere, float timeLength, Vector3 toAngle, int theId, int theFollowId, float theDelay) {
-        public Transform toMove = toAnimate;
-        public Vector3 start = toAnimate.localPosition;
-        public Vector3 goal = toWhere;
-        public float startTime = Time.time;
-        public float duration = timeLength;
-        public Vector3 rotStart = toAnimate.localEulerAngles;
-        public Vector3 rotGoal = toAngle;
-        public int id = theId;
-        public int followId = theFollowId;
-        public float delay = theDelay;
-    }
-    List<MvbAnimation> animationQueue = [];
-    Dictionary<int, float> encountered = [];
-    Dictionary<int, Tuple<Action, int, int>> buddies = [];
-
-    private void FixedUpdate() {
-        foreach((int theId, Tuple<Action, int, int> theAction) in buddies) {
-            if(theId == 0 || encountered.ContainsKey(theId)) {
-                if((Time.frameCount - theAction.Item3) % theAction.Item2 == 0) {
-                    theAction.Item1();
-                }
+    private class MvbAnimation(Transform target, Vector3 toPos, Vector3 toRot, float duration, int followId = 0, float delay = 0f) {
+        public int followId = followId;
+        public Transform target = target;
+        public Vector3 fromPos = target.localPosition, toPos = toPos;
+        public Vector3 fromRot = target.localEulerAngles, toRot = toRot;
+        public float startTime = Time.time, duration = duration, delay = delay;
+        public bool Update() {
+            if(Time.time >= startTime) {
+                float smooth = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((Time.time - startTime) / duration));
+                target.localPosition = Vector3.Lerp(fromPos, toPos, smooth);
+                target.localEulerAngles = Vector3.Lerp(fromRot, toRot, smooth);
+                if(smooth >= 1f) return true;
             }
-        }
-        if(animationQueue.Count > 0) {
-            for(int i = 0;i < animationQueue.Count;i++) {
-                if(animationQueue[i].id == 0 || encountered.TryGetValue(animationQueue[i].id, out animationQueue[i].startTime)) {
-                    if(Time.time - animationQueue[i].startTime >= animationQueue[i].duration) {
-                        animationQueue[i].toMove.localPosition = animationQueue[i].goal;
-                        animationQueue[i].toMove.localEulerAngles = animationQueue[i].rotGoal;
-                        if(animationQueue[i].id == 0) {
-                            if(animationQueue[i].followId > 0) {
-                                encountered.Add(animationQueue[i].followId, Time.time + ((animationQueue[i].delay < 0) ? UnityEngine.Random.Range(-1f, -0.1f) * animationQueue[i].delay : animationQueue[i].delay));
-                            }
-                            animationQueue.RemoveAt(i);
-                            i--;
-                        } else {
-                            encountered.Remove(animationQueue[i].id);
-                            if(animationQueue[i].followId > 0) {
-                                encountered.Add(animationQueue[i].followId, Time.time + ((animationQueue[i].delay < 0) ? UnityEngine.Random.Range(-1f, -0.1f) * animationQueue[i].delay : animationQueue[i].delay));
-                            }
-                        }
-                    } else if(Time.time >= animationQueue[i].startTime) {
-                        animationQueue[i].toMove.localPosition = Vector3.Lerp(animationQueue[i].start, animationQueue[i].goal, Mathf.SmoothStep(0f, 1f, (Time.time - animationQueue[i].startTime) / animationQueue[i].duration));
-                        animationQueue[i].toMove.localEulerAngles = Vector3.Lerp(animationQueue[i].rotStart, animationQueue[i].rotGoal, Mathf.SmoothStep(0f, 1f, (Time.time - animationQueue[i].startTime) / animationQueue[i].duration));
-                    }
-                }
-            }
+            return false;
         }
     }
 
-    public void MvbBonusAction(int theId, Action theAction, int module = 1, int offset = 0) { // if theId=0 -> infinite repetitions of theAction each frame!!
-        buddies.Add(theId, new Tuple<Action, int, int>(theAction, Mathf.Max(module, 1), offset));
+    private struct MvbAnimAction(Action action, int interval, int offset) {
+        public Action action = action;
+        public int interval = interval;
+        public int offset = offset;
     }
 
-    public void MvbAnimator(Transform toAnimate, Vector3 toWhere, float timeLength, Vector3 toAngle, int id = 0, int followId = 0, float delay = 0) {
-        animationQueue.Add(new MvbAnimation(toAnimate, toWhere, timeLength, toAngle, id, followId, delay));
+    readonly Dictionary<int, MvbAnimation> activeAnimations = [];
+    readonly Dictionary<int, float> idRunning = [];
+    readonly Dictionary<int, MvbAnimAction> scheduledActions = [];
+    void Update() {
+        if(scheduledActions.ContainsKey(0))
+            scheduledActions[0].action();
+        if(activeAnimations.ContainsKey(0))
+            if(activeAnimations[0].Update()) {
+                if(activeAnimations[0].followId > 0)
+                    idRunning[activeAnimations[0].followId] = RollDelay(activeAnimations[0].delay);
+                activeAnimations.Remove(0);
+            }
+        List<int> completed = [];
+        foreach((int id, float delay) in idRunning) {
+            if(scheduledActions.TryGetValue(id, out MvbAnimAction act) && ((Time.frameCount - act.offset) % act.interval == 0))
+                act.action();
+            if(activeAnimations.TryGetValue(id, out MvbAnimation anim) && Time.time >= delay)
+                if(anim.Update()) {
+                    completed.Add(id);
+                    if(anim.followId > 0)
+                        idRunning[anim.followId] = RollDelay(anim.delay);
+                }
+        }
+        foreach(int id in completed) idRunning.Remove(id);
     }
-    public void MvbAnimator(Transform toAnimate, Vector3 toWhere, float timeLength, int id = 0, int followId = 0, float delay = 0) {
-        MvbAnimator(toAnimate, toWhere, timeLength, toAnimate.localEulerAngles, id, followId, delay);
+    float RollDelay(float delay) => Time.time + ((delay < 0f) ? UnityEngine.Random.Range(-1f, -0.1f) * delay : delay);
+
+    public void Animate(Transform target, Vector3 toPos, float duration, Vector3 toRot, int id = 0, int nextId = 0, float delay = 0f) {
+        activeAnimations[id] = new MvbAnimation(target, toPos, toRot, duration, nextId, delay);
     }
-    public void MvbAnimator(Transform toAnimate, float timeLength, Vector3 toAngle, int id = 0, int followId = 0, float delay = 0) {
-        MvbAnimator(toAnimate, toAnimate.localPosition, timeLength, toAngle, id, followId, delay);
+    public void Animate(Transform target, Vector3 toPos, float duration, int id = 0, int nextId = 0, float delay = 0f) {
+        Animate(target, toPos, duration, target.localEulerAngles, id, nextId, delay);
     }
-    public void MvbAnimator(int followId, float delay = 0f) {
-        if(followId > 0) {
-            encountered.Add(followId, Time.time + delay);
-        } else if(followId < 0) {
-            encountered.Remove(-followId);
+    public void Animate(Transform target, float duration, Vector3 toRot, int id = 0, int nextId = 0, float delay = 0f) {
+        Animate(target, target.localPosition, duration, toRot, id, nextId, delay);
+    }
+    public void SetTrigger(int triggerId, float delay = 0f) {
+        if(triggerId > 0) {
+            idRunning[triggerId] = Time.time + delay;
+        } else if(triggerId < 0) {
+            idRunning.Remove(-triggerId);
         } else {
-            encountered.Clear();
+            idRunning.Clear();
         }
     }
-    public void MvbAnimator() {
-        encountered.Clear();
-        buddies.Clear();
-        animationQueue.Clear();
+    public void AddAction(int id, Action action, int interval = 1, int offset = 0) {
+        scheduledActions[id] = new MvbAnimAction(action, Mathf.Max(interval, 1), offset);
+    }
+    public void ResetAll() {
+        activeAnimations.Clear();
+        idRunning.Clear();
+        scheduledActions.Clear();
     }
 
     public enum AnimationType {
@@ -515,6 +503,6 @@ public class MVBMod_Animator : MonoBehaviour {
     }
 }
 
-public class MVBMod_tag : MonoBehaviour {
+public class MVBTheTrick_tag : MonoBehaviour {
     public string type = null;
 }
